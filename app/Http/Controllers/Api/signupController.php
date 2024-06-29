@@ -46,7 +46,7 @@ class SignupController extends Controller
                 'status' => true,
                 'message' => ucfirst($role) . ' registered successfully',
                 'user' => $user,
-            ], 201);
+            ], 200);
         } catch (\Exception $e) {
             // Handle specific exceptions here
             if ($e instanceof \Illuminate\Database\QueryException && $e->errorInfo[1] == 1062) {
