@@ -85,12 +85,11 @@ class postController extends Controller
     {
         $title = request()->title;
         $content = request()->content;
-        $user_id = request()->user_id;
+        // $user_id = request()->user_id;
 
         $validatedData = $request->validate([
             'title' => ['required', 'min:3'],
             'content' => ['required', 'min:5'],
-            'user_id' => ['required', 'exists:users,id']
         ]);
 
         if (Auth::user()->id !== $post->user_id) {
@@ -100,7 +99,6 @@ class postController extends Controller
         $post->update([
             'title' => $validatedData['title'],
             'content' => $validatedData['content'],
-            'user_id' => $validatedData['user_id'],
         ]);
         return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
     }

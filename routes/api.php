@@ -38,6 +38,7 @@ Route::prefix('posts')->name('posts.')->controller(PostController::class)->middl
     Route::post('/store', 'store')->name('store');
     Route::get('/{post}', 'show')->name('show');
     Route::put('/{post}', 'update')->name('update');
+
     Route::delete('/{post}', 'destroy')->name('destroy');
 });
 
