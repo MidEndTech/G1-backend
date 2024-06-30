@@ -39,6 +39,7 @@ class SignupController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $role,
+                'bio' => $request->bio
             ]);
 
             // Return a success response with the created user data

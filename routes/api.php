@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\signupController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\profileController;
 use App\Models\User;
 use App\Models\Post;
 
@@ -43,8 +44,9 @@ Route::prefix('posts')->name('posts.')->controller(PostController::class)->group
 
 //profile routes
 Route::prefix('profile')->name('profile.')->controller(profileController::class)->group(function () {
-    Route::get('/')
-})
+    Route::get('{user}', 'viewProfile')->name('view');
+    Route::middleware('auth:sanctum')->put('edit/{user}', 'editProfile')->name('edit/{user}');
+});
 
 
 

@@ -23,9 +23,26 @@ class profileController extends Controller {
         if (Auth::user()->id != $user->id) {
             return response()->json([
                 'error'=>'Unauthorized'
-            ], 403);
+            ], 403); 
         }
 
-        $name = request()->name
+
+
+        
+        $validator =  $request->validate([
+            'name' => 'string|max:255',
+            'email' => 'string|email'
+        ]);
+
+
+        $user->update([
+            'name' =>  $validator['name'] ?? $user->name,
+            'bio' =>  $request->bio ?? $user->bio,
+            'email' =>  $validator['email'] ?? $user->email,
+            // 'password' => $validatedData['password'] ? bcrypt($validatedData['password']) : $user->password,
+        ]);
+
+        return response()->json(['message' => 'Profile updated successfully', 'user' => $user], 200);
+
     }
 }
