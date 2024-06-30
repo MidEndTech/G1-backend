@@ -42,6 +42,11 @@ Route::prefix('posts')->name('posts.')->controller(PostController::class)->middl
     Route::delete('/{post}', 'destroy')->name('destroy');
 });
 
+//profile routes
+Route::prefix('profile')->name('profile.')->controller(profileController::class)->group(function () {
+    Route::get('/')
+})
+
 
 
 
