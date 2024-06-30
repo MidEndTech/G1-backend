@@ -39,6 +39,7 @@ class SignupController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $role,
+                'bio' => $request->bio,
             ]);
 
             // Return a success response with the created user data
@@ -57,7 +58,7 @@ class SignupController extends Controller
                 ], 409); // 409 Conflict status code indicates a conflict with the current state of the server
             }
 
-            // For any other unexpected exceptions, return a generic error response
+            // For any other unexpecpted exceptions, return a generic error response
             return response()->json([
                 'status' => false,
                 'message' => 'Failed to register user. Please try again later.',

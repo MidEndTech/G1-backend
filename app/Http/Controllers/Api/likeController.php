@@ -29,7 +29,17 @@ class likeController extends Controller
         return response()->json(['message' => 'Post already liked'], 409);
     }
 
-    public function unLikes(Post $post)
+    public function unLike(Request $request, Post $post)
     {
+        $user = $request->user();
+
+        if (!$post->likes()->where('user_id', $user->id)->exists()) {
+
+            return response()->json(['message' => 'Post not liked'], 409);
+        }
+
+        $post->likes()->where('user_id', $user->id)->delete();
+
+        return response()->json(['message' => 'liked deleted successfully'], 200);
     }
 }

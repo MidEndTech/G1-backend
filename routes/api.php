@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->post('posts/{post}/like', [likeController::class, 'likePost'])->name('like');
+Route::middleware('auth:sanctum')->post('posts/{post}/unlike', [likeController::class, 'unLike'])->name('unLike');
 
 
 Route::middleware('auth:sanctum')->group(function () {
