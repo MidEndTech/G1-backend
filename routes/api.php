@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\signupController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\likeController;
+
+
 use App\Models\User;
 use App\Models\Post;
 
@@ -33,24 +36,17 @@ Route::post('login', [LoginController::class, 'loginUser'])->name('login');
 Route::get('/posts', [PostController::class, 'index']);
 
 
-Route::prefix('posts')->name('posts.')->controller(PostController::class)->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::middleware('auth:sanctum')->post('/store', 'store')->name('store');
-    Route::get('/{post}', 'show')->name('show');
-    Route::middleware('auth:sanctum')->put('/{post}', 'update')->name('update');
-    Route::middleware('auth:sanctum')->delete('/{post}', 'destroy')->name('destroy');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('posts')->name('posts.')->controller(PostController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/{post}', 'show')->name('show');
+        Route::put('/{post}', 'update')->name('update');
+        Route::delete('/{post}', 'destroy')->name('destroy');
+    });
 });
 
-//profile routes
-Route::prefix('profile')->name('profile.')->controller(profileController::class)->group(function () {
-    Route::get('/')
-})
-
-
-
-
-
-
+Route::middleware('auth:sanctum')->post('posts/{post}/like', [likeController::class, 'likePost'])->name('like');
 
 
 Route::middleware('auth:sanctum')->group(function () {
