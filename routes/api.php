@@ -5,13 +5,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\signupController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\PostController;
-<<<<<<< HEAD
+
 use App\Http\Controllers\Api\profileController;
-=======
+
 use App\Http\Controllers\Api\likeController;
 
 
->>>>>>> d8d122077ef463438a1a26359560a966b75f3f46
+
 use App\Models\User;
 use App\Models\Post;
 
@@ -50,22 +50,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
-<<<<<<< HEAD
-//profile routes
-Route::prefix('profile')->name('profile.')->controller(profileController::class)->group(function () {
-    Route::get('{user}', 'viewProfile')->name('view');
-    Route::middleware('auth:sanctum')->put('edit/{user}', 'editProfile')->name('edit/{user}');
-});
-
-
-
-
-
-
-=======
 Route::middleware('auth:sanctum')->post('posts/{post}/like', [likeController::class, 'likePost'])->name('like');
 Route::middleware('auth:sanctum')->post('posts/{post}/unlike', [likeController::class, 'unLike'])->name('unLike');
->>>>>>> d8d122077ef463438a1a26359560a966b75f3f46
 
 
 Route::middleware('auth:sanctum')->group(function () {
