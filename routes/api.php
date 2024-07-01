@@ -43,6 +43,7 @@ Route::get('/posts', [PostController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('posts')->name('posts.')->controller(PostController::class)->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/recent', 'showRecent')->name('recent');
         Route::post('/store', 'store')->name('store');
         Route::get('/{post}', 'show')->name('show');
         Route::put('/{post}', 'update')->name('update');

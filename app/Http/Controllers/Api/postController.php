@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
+use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Post;
+// use Illuminate\Support\Facades\DB;
 
 class postController extends Controller
 {
@@ -99,5 +101,15 @@ class postController extends Controller
         ]);
 
         return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
+    }
+
+    public function showRecent() {
+
+        $posts = Post::orderByDesc('created_at')->get();
+        return PostResource::collection($posts);
+        
+        // return DB::table('posts')
+        // ->orderBy('created_at','desc')->get();
+
     }
 }
