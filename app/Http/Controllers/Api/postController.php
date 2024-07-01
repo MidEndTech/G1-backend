@@ -20,8 +20,8 @@ class postController extends Controller
     public function index()
     {
 
-        $userPosts = Auth::user()->posts;
-
+        // $userPosts = Auth::user()->posts;
+        $userPosts = Post::all();
         return response()->json(['posts' => $userPosts], 200);
     }
 
