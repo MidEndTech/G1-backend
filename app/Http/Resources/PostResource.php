@@ -15,13 +15,17 @@ class PostResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+
+            'isLiked' => "Post liked",
+            'posts' => PostResource::collection($this->posts)->count(),
+
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'created_at' =>$this->created_at,
+            'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'user_id'=> $this->user_id,
-            'username'=> $this->user->name
+            'user_id' => $this->user_id,
+            'username' => $this->user->name
         ];
     }
 }
