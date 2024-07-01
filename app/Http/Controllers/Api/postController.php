@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -37,27 +38,28 @@ class postController extends Controller
         return response()->json(['post' => $post], 200);
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'title' => 'required|string|max:255',
+        //     'content' => 'required|string',
+        // ]);
+        $validated = $request->validated();
 
-        // Return validation errors if any
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 400);
-        }
+        // // Return validation errors if any
+        // if ($validated->fails()) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Validation error',
+        //         'errors' => $validated->errors()
+        //     ], 400);
+        // }
 
         // Create the post
         $post = Post::create([
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
+            'title' => $validated['title'],
+            'content' => $validated['content'],
             'user_id' => $request->user()->id,
         ]);
 
@@ -81,25 +83,21 @@ class postController extends Controller
         return response()->json(['message' => 'Post deleted successfully'], 200);
     }
 
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        $title = request()->title;
-        $content = request()->content;
-        // $user_id = request()->user_id;
+        $validated = $request->validated();
 
-        $validatedData = $request->validate([
-            'title' => ['required', 'min:3'],
-            'content' => ['required', 'min:5'],
-        ]);
-
+        // Check if the authenticated user is the owner of the post
         if (Auth::user()->id !== $post->user_id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        # update submitted post
+
+        // Update the post with validated data
         $post->update([
-            'title' => $validatedData['title'],
-            'content' => $validatedData['content'],
+            'title' => $validated['title'],
+            'content' => $validated['content'],
         ]);
+
         return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
     }
 }
