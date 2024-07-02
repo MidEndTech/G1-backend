@@ -22,24 +22,25 @@ class postController extends Controller
     }
     public function index()
     {
-
+        $posts = Post::withCount('likes')->orderBy('likes_count', 'desc')->get();
+        return PostResource::collection($posts);
         // $userPosts = Auth::user()->posts;
-        $userPosts = Post::all();
-        return response()->json(['posts' => $userPosts], 200);
     }
-
 
     public function show(Request $request, Post $post)
     {
         // Check if the authenticated user owns the post
         if (Auth::user()->id !== $post->user_id) {
-            // return response()->json(['error' => 'Unauthorized'], 403);
-            return new PostResource(Post::findOrFail($post));
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        // Return the specific post
-        return response()->json(['post' => $post], 200);
+        // Load the likes count
+        $post->loadCount('likes');
+
+        // Return the specific post with likes count
+        return new PostResource($post);
     }
+
 
     public function store(PostRequest $request)
     {
