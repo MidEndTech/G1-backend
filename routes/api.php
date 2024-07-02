@@ -1,19 +1,18 @@
 <?php
 
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\signupController;
-use App\Http\Controllers\Api\LoginController;
-use App\Http\Controllers\Api\PostController;
-
-use App\Http\Controllers\Api\profileController;
-
 use App\Http\Controllers\Api\likeController;
 
+use App\Http\Controllers\Api\PostController;
 
 
-use App\Models\User;
-use App\Models\Post;
+use App\Http\Controllers\Api\ResetController;
+use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\Api\signupController;
+use App\Http\Controllers\Api\profileController;
 
 
 /*
@@ -76,6 +75,10 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 });
-
+//view profile
 Route::middleware('auth:sanctum')->get('/profile', [profileController::class, 'viewProfile'])->name('profile');
+//edit profile
 Route::middleware('auth:sanctum')->put('/profile/edit', [profileController::class, 'editProfile'])->name('edit');
+
+//reser password
+Route::middleware('auth:sanctum')->put('/reset', [ResetController::class, 'reset'])->name('reset');
