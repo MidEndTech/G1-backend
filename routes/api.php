@@ -76,3 +76,6 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 });
+
+Route::middleware('auth:sanctum')->get('/profile', [profileController::class, 'viewProfile'])->name('profile');
+Route::middleware('auth:sanctum')->put('/profile/edit', [profileController::class, 'editProfile'])->name('edit');
