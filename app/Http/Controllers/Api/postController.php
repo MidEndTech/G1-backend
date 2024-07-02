@@ -30,9 +30,9 @@ class postController extends Controller
     public function show(Request $request, Post $post)
     {
         // Check if the authenticated user owns the post
-        if (Auth::user()->id !== $post->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
+        // if (Auth::user()->id !== $post->user_id) {
+        //     return response()->json(['error' => 'Unauthorized'], 403);
+        // }
 
         // Load the likes count
         $post->loadCount('likes');

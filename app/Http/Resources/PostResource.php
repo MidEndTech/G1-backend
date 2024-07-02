@@ -22,7 +22,9 @@ class PostResource extends JsonResource
             'updated_at' => $this->updated_at,
             'user_id' => $this->user_id,
             'username' => $this->user->name,
-            'Likes' => $this->likes()->count()
+            'Likes' => $this->likes()->count(),
+            'unique_views_count' => $this->uniqueViewsCount(), // Include the unique views count
+
         ];
     }
 }
