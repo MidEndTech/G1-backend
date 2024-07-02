@@ -105,14 +105,16 @@ class postController extends Controller
         return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
     }
 
-    public function showRecent()
-    {
+    public function showRecent() {
 
         $posts = Post::orderByDesc('created_at')->get();
-        return PostResource::collection($posts);
-
+        return response()->json([
+            'post'=> PostResource::collection($posts)
+        ],200);
+        // [PostResource::collection($posts), response()->json([],200)];
+        
         // return DB::table('posts')
         // ->orderBy('created_at','desc')->get();
-
     }
+
 }
