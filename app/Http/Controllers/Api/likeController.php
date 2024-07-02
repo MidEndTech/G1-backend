@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\PostResource;
+use App\Http\Resources\LikeResource;
+
 use App\Http\Controllers\Controller;
 use App\Models\Like;
 use App\Models\User;
@@ -25,8 +27,10 @@ class likeController extends Controller
             $post->likes()->save($like);
 
             // return response()->json(['message' => 'Post liked'], 200);
-
-            return new PostResource(Post::findOrFail($post));
+            return response()->json([
+                'message' => 'Post liked',
+                'like' => new LikeResource($post), // Format the like instance using LikeResource
+            ], 200);
         }
 
         return response()->json(['message' => 'Post already liked'], 409);

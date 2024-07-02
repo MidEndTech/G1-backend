@@ -33,7 +33,8 @@ class postController extends Controller
     {
         // Check if the authenticated user owns the post
         if (Auth::user()->id !== $post->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            // return response()->json(['error' => 'Unauthorized'], 403);
+            return new PostResource(Post::findOrFail($post));
         }
 
         // Return the specific post
@@ -103,11 +104,12 @@ class postController extends Controller
         return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
     }
 
-    public function showRecent() {
+    public function showRecent()
+    {
 
         $posts = Post::orderByDesc('created_at')->get();
         return PostResource::collection($posts);
-        
+
         // return DB::table('posts')
         // ->orderBy('created_at','desc')->get();
 
