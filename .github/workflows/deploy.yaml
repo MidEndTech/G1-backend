@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: deploying to the backend server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.GLOBAL_HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{secrets.private_key}}
+        script_stop: true
+        script: |
+          cd /var/www/G1-backend
+          git pull
+          composer install
+          php artisan optimize
+          php artisan migrate
