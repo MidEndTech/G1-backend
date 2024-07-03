@@ -28,10 +28,10 @@ class Post extends Model
     {
         return $this->likes()->count();
     }
-    public function uniqueViewsCount()
-    {
-        $cacheKey = "post_{$this->id}_views";
-        $uniqueViews = Cache::get($cacheKey, collect());
-        return $uniqueViews->count();
-    }
+    // public function uniqueViewsCount()
+    // {
+    //     $cacheKey = "post_{$this->id}_views";
+    //     $uniqueViews = Cache::get($cacheKey, collect());
+    //     return $uniqueViews->count();
+    // }
 }

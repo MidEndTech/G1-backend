@@ -1,18 +1,16 @@
 <?php
 
-use App\Models\Post;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\likeController;
-
-use App\Http\Controllers\Api\PostController;
-
-
-use App\Http\Controllers\Api\ResetController;
 use App\Http\Controllers\Api\LoginController;
-use App\Http\Controllers\Api\signupController;
-use App\Http\Controllers\Api\profileController;
+use App\Http\Controllers\Api\SignupController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\LikeController;
+use App\Http\Controllers\Api\ResetController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Models\User;
+use App\Models\Post;
+
 
 
 /*
@@ -44,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/recent', 'showRecent')->name('recent');
         Route::post('/store', 'store')->name('store');
-        Route::get('/{post}', 'show')->middleware('track.views')->name('show');
+        Route::get('/{post}', 'show')->name('show');
         Route::put('/{post}', 'update')->name('update');
         Route::delete('/{post}', 'destroy')->name('destroy');
     });
