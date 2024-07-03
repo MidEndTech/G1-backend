@@ -44,11 +44,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/recent', 'showRecent')->name('recent');
         Route::post('/store', 'store')->name('store');
-        Route::get('/{post}', 'show')->name('show');
+        Route::get('/{post}', 'show')->middleware('track.views')->name('show');
         Route::put('/{post}', 'update')->name('update');
         Route::delete('/{post}', 'destroy')->name('destroy');
     });
 });
+
 
 Route::middleware('auth:sanctum')->post('posts/{post}/like', [likeController::class, 'likePost'])->name('like');
 Route::middleware('auth:sanctum')->post('posts/{post}/unlike', [likeController::class, 'unLike'])->name('unLike');
