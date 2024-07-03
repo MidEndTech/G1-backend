@@ -83,3 +83,4 @@ Route::middleware('auth:sanctum')->put('/profile/edit', [profileController::clas
 
 //reser password
 Route::middleware('auth:sanctum')->put('/reset', [ResetController::class, 'reset'])->name('reset');
+Route::middleware('auth:sanctum')->get('/viewer', [PostController::class, 'viewer'])->name('viewer');
