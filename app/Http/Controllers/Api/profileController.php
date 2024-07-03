@@ -39,6 +39,7 @@ class profileController extends Controller {
         'name' => 'string|max:255',
         'email' => 'string|email|max:255',
         'bio' => 'nullable|string',
+        'pic' => 'nullable|string',
     ]);
 
     // Update user attributes with validated data
@@ -47,6 +48,7 @@ class profileController extends Controller {
         'email' => $validatedData['email'] ?? $user->email,
         // Only set 'bio' if it exists in the request, even if it is null
         'bio' => array_key_exists('bio', $validatedData) ? $validatedData['bio'] : $user->bio,
+        'pic' => $validatedData['pic'] ?? $user->pic
     ]);
 
 
