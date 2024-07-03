@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 // register 
-Route::post('register/{role}', [signupController::class, 'register'])->name('register/{role}');
+Route::post('register/{role}', [SignupController::class, 'register'])->name('register/{role}');
 
 //login
 Route::post('login', [LoginController::class, 'loginUser'])->name('login');
@@ -49,8 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::middleware('auth:sanctum')->post('posts/{post}/like', [likeController::class, 'likePost'])->name('like');
-Route::middleware('auth:sanctum')->post('posts/{post}/unlike', [likeController::class, 'unLike'])->name('unLike');
+Route::middleware('auth:sanctum')->post('posts/{post}/like', [LikeController::class, 'likePost'])->name('like');
+Route::middleware('auth:sanctum')->post('posts/{post}/unlike', [LikeController::class, 'unLike'])->name('unLike');
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -75,9 +75,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 //view profile
-Route::middleware('auth:sanctum')->get('/profile', [profileController::class, 'viewProfile'])->name('profile');
+Route::middleware('auth:sanctum')->get('/profile', [ProfileController::class, 'viewProfile'])->name('profile');
 //edit profile
-Route::middleware('auth:sanctum')->put('/profile/edit', [profileController::class, 'editProfile'])->name('edit');
+Route::middleware('auth:sanctum')->put('/profile/edit', [ProfileController::class, 'editProfile'])->name('edit');
 
 //reser password
 Route::middleware('auth:sanctum')->put('/reset', [ResetController::class, 'reset'])->name('reset');

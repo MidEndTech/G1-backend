@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 // use Illuminate\Support\Facades\DB;
 
-class postController extends Controller
+class PostController extends Controller
 {
 
     public function __construct()
