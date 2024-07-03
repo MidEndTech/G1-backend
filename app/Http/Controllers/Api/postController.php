@@ -28,9 +28,17 @@ class postController extends Controller
         return PostResource::collection($posts);
         // $userPosts = Auth::user()->posts;
     }
+    public function viewer()
+    {
+        $post = Post::orderBy('views', 'desc')->get();
+        return PostResource::collection($post);
+        // $userPosts = Auth::user()->posts;
+    }
 
     public function show(Request $request, Post $post)
     {
+        $post->increment('views');
+
         // Check if the authenticated user owns the post
         if (Auth::user()->id !== $post->user_id) {
             return new PostResource($post);
@@ -39,6 +47,8 @@ class postController extends Controller
         // L{oad the likes count
         else {
             $post->loadCount('likes');
+
+
 
             // Return the specific post with likes count
             return new EditableResource($post);
@@ -75,7 +85,7 @@ class postController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Post created successfully',
-            'post' => $post
+            'data' => PostResource::collection($post)
         ], 200);
     }
     public function destroy(Post $post)
@@ -106,7 +116,7 @@ class postController extends Controller
             'content' => $validated['content'],
         ]);
 
-        return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
+        return response()->json(['message' => 'Post updated successfully', 'data' => PostResource::collection($post)], 200);
     }
 
     public function showRecent()
@@ -114,11 +124,7 @@ class postController extends Controller
 
         $posts = Post::orderByDesc('created_at')->get();
         return response()->json([
-            'post' => PostResource::collection($posts)
+            'data' => PostResource::collection($posts)
         ], 200);
-        // [PostResource::collection($posts), response()->json([],200)];
-
-        // return DB::table('posts')
-        // ->orderBy('created_at','desc')->get();
     }
 }
