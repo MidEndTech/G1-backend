@@ -28,9 +28,17 @@ class postController extends Controller
         return PostResource::collection($posts);
         // $userPosts = Auth::user()->posts;
     }
+    public function viewer()
+    {
+        $post = Post::orderBy('views', 'desc')->get();
+        return PostResource::collection($post);
+        // $userPosts = Auth::user()->posts;
+    }
 
     public function show(Request $request, Post $post)
     {
+        $post->increment('views');
+
         // Check if the authenticated user owns the post
         if (Auth::user()->id !== $post->user_id) {
             return new PostResource($post);
@@ -39,6 +47,8 @@ class postController extends Controller
         // L{oad the likes count
         else {
             $post->loadCount('likes');
+
+
 
             // Return the specific post with likes count
             return new EditableResource($post);

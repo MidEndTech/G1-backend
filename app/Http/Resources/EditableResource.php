@@ -23,7 +23,7 @@ class EditableResource extends JsonResource
             'user_id' => $this->user_id,
             'username' => $this->user->name,
             'Likes' => $this->likes()->count(),
-            'unique_views_count' => $this->uniqueViewsCount(), // Include the unique views count
+            'views' => $this->views,
             'editable' => 'yes'
         ];
     }
