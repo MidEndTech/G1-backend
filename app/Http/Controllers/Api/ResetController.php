@@ -25,7 +25,6 @@ class ResetController extends Controller
         $user = User::find($userId);
         // Validate the incoming request data
         $validator = Validator::make($request->all(), [
-            'current_password' => 'required|string|min:8',
             'new_password' => 'required|string|min:8|confirmed',
         ]);
         
@@ -37,17 +36,9 @@ class ResetController extends Controller
         ], 422); // 422 Unprocessable Entity status code for validation errors
 }
 
-    // Check if the current password matches the user's password
-    $currentPass = $request->current_password;
-    if (!Hash::check($currentPass, $user->password)) {
-        return response()->json([
-            'error' => 'Current password does not match'
-        ], 400);
-    }
-
     // Update the user's password
-    $newPass = $request->new_password;
-    $user->password = Hash::make($newPass);
+    // $newPass = $request->new_password;
+    $user->password = Hash::make($request->new_password);
     $user->save();
 
     return response()->json([
