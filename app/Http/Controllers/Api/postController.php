@@ -47,9 +47,6 @@ class postController extends Controller
         // L{oad the likes count
         else {
             $post->loadCount('likes');
-
-
-
             // Return the specific post with likes count
             return new EditableResource($post);
         }
@@ -58,21 +55,8 @@ class postController extends Controller
 
     public function store(PostRequest $request)
     {
-        // Validate the request data
-        // $validator = Validator::make($request->all(), [
-        //     'title' => 'required|string|max:255',
-        //     'content' => 'required|string',
-        // ]);
-        $validated = $request->validated();
 
-        // // Return validation errors if any
-        // if ($validated->fails()) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Validation error',
-        //         'errors' => $validated->errors()
-        //     ], 400);
-        // }
+        $validated = $request->validated();
 
         // Create the post
         $post = Post::create([
@@ -85,7 +69,7 @@ class postController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Post created successfully',
-            'data' => PostResource::collection($post)
+            'data' => PostResource::make($post)
         ], 200);
     }
     public function destroy(Post $post)
