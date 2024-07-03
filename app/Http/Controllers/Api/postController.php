@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\EditableResource;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -31,14 +33,16 @@ class postController extends Controller
     {
         // Check if the authenticated user owns the post
         if (Auth::user()->id !== $post->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            return new PostResource($post);
         }
 
-        // Load the likes count
-        $post->loadCount('likes');
+        // L{oad the likes count
+        else {
+            $post->loadCount('likes');
 
-        // Return the specific post with likes count
-        return new PostResource($post);
+            // Return the specific post with likes count
+            return new EditableResource($post);
+        }
     }
 
 
@@ -105,16 +109,16 @@ class postController extends Controller
         return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
     }
 
-    public function showRecent() {
+    public function showRecent()
+    {
 
         $posts = Post::orderByDesc('created_at')->get();
         return response()->json([
-            'post'=> PostResource::collection($posts)
-        ],200);
+            'post' => PostResource::collection($posts)
+        ], 200);
         // [PostResource::collection($posts), response()->json([],200)];
-        
+
         // return DB::table('posts')
         // ->orderBy('created_at','desc')->get();
     }
-
 }

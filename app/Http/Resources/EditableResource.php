@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class EditableResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,9 +24,7 @@ class PostResource extends JsonResource
             'username' => $this->user->name,
             'Likes' => $this->likes()->count(),
             'unique_views_count' => $this->uniqueViewsCount(), // Include the unique views count
-            'editable' => 'no'
-
-
+            'editable' => 'yes'
         ];
     }
 }
