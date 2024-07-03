@@ -75,7 +75,7 @@ class postController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Post created successfully',
-            'post' => $post
+            'data' => PostResource::collection($post)
         ], 200);
     }
     public function destroy(Post $post)
@@ -106,7 +106,7 @@ class postController extends Controller
             'content' => $validated['content'],
         ]);
 
-        return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
+        return response()->json(['message' => 'Post updated successfully', 'data' => PostResource::collection($post)], 200);
     }
 
     public function showRecent()
@@ -114,11 +114,7 @@ class postController extends Controller
 
         $posts = Post::orderByDesc('created_at')->get();
         return response()->json([
-            'post' => PostResource::collection($posts)
+            'data' => PostResource::collection($posts)
         ], 200);
-        // [PostResource::collection($posts), response()->json([],200)];
-
-        // return DB::table('posts')
-        // ->orderBy('created_at','desc')->get();
     }
 }
