@@ -46,6 +46,7 @@ class SignupController extends Controller
             ]);
 
             // event(new Registered($user));
+            $token = $user->createToken('API_TOKEN')->plainTextToken;
 
 
             // Return a success response with the created user data
@@ -53,6 +54,7 @@ class SignupController extends Controller
                 'status' => true,
                 'message' => ucfirst($role) . ' registered successfully',
                 'user' => $user,
+                'token' => $token,
             ], 200);
         } catch (\Exception $e) {
             Log::error('User registration failed: ' . $e->getMessage(), ['exception' => $e]);
