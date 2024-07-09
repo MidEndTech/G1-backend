@@ -10,6 +10,9 @@ use App\Http\Controllers\Api\ResetController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Models\User;
 use App\Models\Post;
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\LocaleController;
+
 
 
 
@@ -82,3 +85,14 @@ Route::middleware('auth:sanctum')->put('/profile/edit', [ProfileController::clas
 //reser password
 Route::middleware('auth:sanctum')->put('/reset', [ResetController::class, 'reset'])->name('reset');
 Route::middleware('auth:sanctum')->get('/viewer', [PostController::class, 'viewer'])->name('viewer');
+
+
+Route::middleware('SetLocale')->group(function () {
+    Route::post('locale/{locale}', [LocaleController::class, 'changeLocale']);
+});
+
+// Route::middleware('SetLocale')->get('lang/{locale}', function ($locale) {
+//     App::setLocale($locale);
+//     session()->put('locale', $locale);
+//     return redirect()->back();
+// });

@@ -35,14 +35,14 @@ class ResetController extends Controller
         if ($validator->fails()) {
             return response()->json([
 
-            'error' => 'Validation failed',
-        ], 422); // 422 Unprocessable Entity status code for validation errors
-}
+                'error' => 'Validation failed',
+            ], 422); // 422 Unprocessable Entity status code for validation errors
+        }
 
-    // Update the user's password
-    // $newPass = $request->new_password;
-    $user->password = Hash::make($request->new_password);
-    $user->save();
+        // Update the user's password
+        // $newPass = $request->new_password;
+        $user->password = Hash::make($request->new_password);
+        $user->save();
 
         // Update the user's password
         $newPass = $request->new_password;
