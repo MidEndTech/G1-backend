@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
+
 
 
 class SignupController extends Controller
@@ -30,8 +32,10 @@ class SignupController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
+                'message' => __('validation.failed'),
+                'errors' => $validator->errors(),
+                'locale' => session('locale', App::getLocale()), // Access session locale
+
             ], 400);
         }
 

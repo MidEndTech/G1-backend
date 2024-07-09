@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\hash;
+use Illuminate\Support\Facades\App;
+
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -28,8 +30,10 @@ class LoginController extends Controller
             if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Validation error',
-                    'errors' => $validateUser->errors()
+                    'message' => __('validation.failed'),
+                    'errors' => $validateUser->errors(),
+                    'locale' => session('locale', App::getLocale()), // Access session locale
+
                 ], 401);
             }
 
