@@ -13,7 +13,7 @@ use App\Models\Post;
 
 use Illuminate\Http\Request;
 
-class likeController extends Controller
+class LikeController extends Controller
 {
 
     public function likePost(Request $request, Post $post)

@@ -1,18 +1,19 @@
 <?php
 
-use App\Models\Post;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\likeController;
-
-use App\Http\Controllers\Api\PostController;
-
-
-use App\Http\Controllers\Api\ResetController;
 use App\Http\Controllers\Api\LoginController;
-use App\Http\Controllers\Api\signupController;
-use App\Http\Controllers\Api\profileController;
+use App\Http\Controllers\Api\SignupController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\LikeController;
+use App\Http\Controllers\Api\ResetController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Models\User;
+use App\Models\Post;
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\LocaleController;
+
+
 
 
 /*
@@ -30,7 +31,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 // register 
-Route::post('register/{role}', [signupController::class, 'register'])->name('register/{role}');
+Route::post('register/{role}', [SignupController::class, 'register'])->name('register/{role}');
 
 //login
 Route::post('login', [LoginController::class, 'loginUser'])->name('login');
@@ -44,15 +45,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/recent', 'showRecent')->name('recent');
         Route::post('/store', 'store')->name('store');
-        Route::get('/{post}', 'show')->middleware('track.views')->name('show');
+        Route::get('/{post}', 'show')->name('show');
         Route::put('/{post}', 'update')->name('update');
         Route::delete('/{post}', 'destroy')->name('destroy');
     });
 });
 
 
-Route::middleware('auth:sanctum')->post('posts/{post}/like', [likeController::class, 'likePost'])->name('like');
-Route::middleware('auth:sanctum')->post('posts/{post}/unlike', [likeController::class, 'unLike'])->name('unLike');
+Route::middleware('auth:sanctum')->post('posts/{post}/like', [LikeController::class, 'likePost'])->name('like');
+Route::middleware('auth:sanctum')->post('posts/{post}/unlike', [LikeController::class, 'unLike'])->name('unLike');
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -77,10 +78,21 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 //view profile
-Route::middleware('auth:sanctum')->get('/profile', [profileController::class, 'viewProfile'])->name('profile');
+Route::middleware('auth:sanctum')->get('/profile', [ProfileController::class, 'viewProfile'])->name('profile');
 //edit profile
-Route::middleware('auth:sanctum')->put('/profile/edit', [profileController::class, 'editProfile'])->name('edit');
+Route::middleware('auth:sanctum')->put('/profile/edit', [ProfileController::class, 'editProfile'])->name('edit');
 
 //reser password
 Route::middleware('auth:sanctum')->put('/reset', [ResetController::class, 'reset'])->name('reset');
 Route::middleware('auth:sanctum')->get('/viewer', [PostController::class, 'viewer'])->name('viewer');
+
+
+Route::middleware('SetLocale')->group(function () {
+    Route::post('locale/{locale}', [LocaleController::class, 'changeLocale']);
+});
+
+// Route::middleware('SetLocale')->get('lang/{locale}', function ($locale) {
+//     App::setLocale($locale);
+//     session()->put('locale', $locale);
+//     return redirect()->back();
+// });
