@@ -15,7 +15,7 @@ class LocaleController extends Controller
             Session::put('locale', $locale);
             App::setLocale($locale);
 
-            return response()->json(['message' => 'Locale changed successfully.' . $locale]);
+            return response()->json(['message' => 'Locale changed successfully' . $locale]);
         }
 
         return response()->json(['message' => 'Locale not supported.'], 400);

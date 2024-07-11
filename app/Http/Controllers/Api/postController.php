@@ -57,8 +57,9 @@ class PostController extends Controller
     {
 
         $validated = $request->validated();
-
+        $this->authorize('create', Post::class);
         // Create the post
+
         $post = Post::create([
             'title' => $validated['title'],
             'content' => $validated['content'],
@@ -74,10 +75,10 @@ class PostController extends Controller
     }
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post);
+        // auth()->user()->can('update',[$post]) 
         // Check if the authenticated user owns the post
-        if (Auth::user()->id !== $post->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
+
 
         // If authorized, delete the post
         $post->delete();
@@ -85,23 +86,23 @@ class PostController extends Controller
         return response()->json(['message' => 'Post deleted successfully'], 200);
     }
 
+
     public function update(PostRequest $request, Post $post)
     {
         $validated = $request->validated();
 
-        // Check if the authenticated user is the owner of the post
-        if (Auth::user()->id !== $post->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
+        // Authorize the update action
+        $this->authorize('update', $post);
 
         // Update the post with validated data
         $post->update([
             'title' => $validated['title'],
-            'content' => $validated['content'],
+            'content' => $validated['content'], // Assuming 'content' is a field in your Post model
         ]);
 
-        return response()->json(['message' => 'Post updated successfully', 'data' => PostResource::collection($post)], 200);
+        return response()->json(['message' => 'Post updated successfully', 'data' => PostResource::make($post)], 200);
     }
+
 
     public function showRecent()
     {
