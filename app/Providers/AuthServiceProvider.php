@@ -3,7 +3,13 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\Post;
+use App\Models\User;
+use App\Policies\PostPolicy;
+use App\Policies\ProfilePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -13,7 +19,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Post::class => PostPolicy::class,
+        User::class => ProfilePolicy::class
+
     ];
 
     /**
@@ -21,6 +29,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
     }
 }

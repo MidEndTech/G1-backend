@@ -38,6 +38,7 @@ class PostController extends Controller
     public function show(Request $request, Post $post)
     {
         $post->increment('views');
+        $this->authorize('view', $post);
 
         // Check if the authenticated user owns the post
         if (Auth::user()->id !== $post->user_id) {

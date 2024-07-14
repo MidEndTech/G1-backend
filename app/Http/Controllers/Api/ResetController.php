@@ -40,7 +40,6 @@ class ResetController extends Controller
         }
 
         // Update the user's password
-        // $newPass = $request->new_password;
         $user->password = Hash::make($request->new_password);
         $user->save();
 
