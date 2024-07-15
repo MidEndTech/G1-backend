@@ -27,7 +27,10 @@ class PostPolicy
      */
     public function view(?User $user, Post $post)
     {
-        return $user?->id === $post->user_id;
+        if($user?->id === $post->user_id){
+            throw new \App\Exceptions\UnauthorizedActionException('المستخدم لم يسجل دخوله, يرجى تسجيل الدخول لعرض المنشورات');  
+        }
+        return true;
     }
     /**
      * Determine whether the user can create models.
@@ -35,7 +38,11 @@ class PostPolicy
     public function create(User $user)
     {
 
-        return $user->role === 'user';
+        if($user->role !== 'user'){
+            throw new \App\Exceptions\UnauthorizedActionException('المستخدم لم يسجل دخوله, يرجى تسجيل الدخول لنشر منشور جديد');  
+        }
+        return true;
+
     }
 
     /**
@@ -44,7 +51,10 @@ class PostPolicy
     public function update(?User $user, Post $post)
     {
 
-        return $user?->id === $post->user_id;
+        if($user?->id !== $post->user_id){
+            throw new \App\Exceptions\UnauthorizedActionException('لتعديل هذا المنشور يرجى تسجيل الدخول بالحساب الذي تم انشاء المنشور به ');
+        }
+        return true;
     }
 
     /**
@@ -52,9 +62,13 @@ class PostPolicy
      */
     public function delete(?User $user, Post $post)
     {
-
-        return $user?->id === $post->user_id;
+        if ($user?->id !== $post->user_id) {
+            throw new \App\Exceptions\UnauthorizedActionException('لحذف هذا المنشور يجب تسجيل الدخول بالحساب الذي تم انشاء المنشور به ');
+        }
+    
+        return true;
     }
+    
 
     /**
      * Determine whether the user can restore the model.
