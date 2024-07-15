@@ -14,12 +14,21 @@ class ProfilePolicy
     public function show(User $user, User $model)
     {
 
-        return $user->id === $model->id;
+        if( $user->id === $model->id) {
+            throw new \App\Exceptions\UnauthorizedActionException('المستخدم لم يسجل دخوله, يرجى تسجيل الدخول لعرض صفحة المستخدم');
+        }
+    
+        return true;
     }
 
     public function update(User $user, User $model)
     {
 
-        return $user->id === $model->id;
+    if( $user->id === $model->id) {
+        throw new \App\Exceptions\UnauthorizedActionException('المستخدم لم يسجل دخوله, يرجى تسجيل الدخول لتعديل معلومات المستخدم');
     }
+
+    return true;
+}
+
 }
