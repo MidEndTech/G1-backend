@@ -12,9 +12,7 @@ use App\Models\User;
 use App\Models\Post;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\LocaleController;
-
-
-
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,3 +94,4 @@ Route::middleware('SetLocale')->group(function () {
 //     session()->put('locale', $locale);
 //     return redirect()->back();
 // });
+Route::post('/send-email', [MailController::class, 'sendEmail']);
