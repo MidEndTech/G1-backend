@@ -1,6 +1,10 @@
 <?php
 
+use App\Mail\hellooo;
+use App\Mail\TestMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\Framework\Attributes\Test;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+// Route::get('/', function () {
+//     Mail::to('ShahdAlsaleh@outlook.com')
+//         ->send(new TestMail());
+// });

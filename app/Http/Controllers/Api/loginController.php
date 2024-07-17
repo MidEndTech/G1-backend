@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LogRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -14,34 +15,16 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    public function loginUser(Request $request)
+    public function loginUser(LogRequest $request)
     {
         try {
             // Validate request inputs
-            $validateUser = Validator::make(
-                $request->all(),
-                [
-                    'email' => 'required|string|email',
-                    'password' => 'required|string',
-                ]
-            );
-
-            // Return validation errors if any
-            if ($validateUser->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => __('validation.failed'),
-                    'errors' => $validateUser->errors(),
-                    'locale' => session('locale', App::getLocale()), // Access session locale
-
-                ], 401);
-            }
-
+            $validateUser = $request->validated();
             // Attempt to authenticate user
             if (!Auth::attempt($request->only(['email', 'password']))) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Incorrect Email or Password'
+                    'message' =>  __('validation.current_password'),
                 ], 401);
             }
 
@@ -62,7 +45,7 @@ class LoginController extends Controller
             // Return error response in case of an exception
             return response()->json([
                 'status' => false,
-                'message' => $th->getMessage()
+                'message' => __('login_failed'), // Message key
             ], 500);
         }
     }
