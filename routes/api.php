@@ -13,7 +13,10 @@ use App\Models\Post;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MailController;
-
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Validation\Rules;
+use SadiqSalau\LaravelOtp\Facades\Otp;
+use App\Otp\UserRegistrationOtp;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -95,3 +98,53 @@ Route::middleware('SetLocale')->group(function () {
 //     return redirect()->back();
 // });
 Route::post('/send-email', [MailController::class, 'sendEmail']);
+
+Route::post('/register', function (Request $request) {
+    $request->validate([
+        'name'          => ['required', 'string', 'max:255'],
+        'email'         => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+        'password'      => ['required',  Rules\Password::defaults()],
+    ]);
+
+    $otp = Otp::identifier($request->email)->send(
+        new UserRegistrationOtp(
+            name: $request->name,
+            email: $request->email,
+            password: $request->password
+        ),
+        Notification::route('mail', $request->email)
+    );
+
+    return __($otp['status']);
+});
+Route::post('/otp/verify', function (Request $request) {
+
+    $request->validate([
+        'email'    => ['required', 'string', 'email', 'max:255'],
+        'code'     => ['required', 'string']
+    ]);
+
+    $otp = Otp::identifier($request->email)->attempt($request->code);
+
+    if ($otp['status'] != Otp::OTP_PROCESSED) {
+        abort(403, __($otp['status']));
+    }
+
+    return $otp['result'];
+});
+
+
+/** OTP Resend Route */
+Route::post('/otp/resend', function (Request $request) {
+
+    $request->validate([
+        'email'    => ['required', 'string', 'email', 'max:255']
+    ]);
+
+    $otp = Otp::identifier($request->email)->update();
+
+    if ($otp['status'] != Otp::OTP_SENT) {
+        abort(403, __($otp['status']));
+    }
+    return __($otp['status']);
+});
