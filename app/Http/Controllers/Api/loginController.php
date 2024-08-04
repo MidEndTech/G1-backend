@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LogRequest;
+use App\Jobs\SendOtp;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -18,35 +19,31 @@ class LoginController extends Controller
     public function loginUser(LogRequest $request)
     {
         try {
-            // Validate request inputs
             $validateUser = $request->validated();
             // Attempt to authenticate user
             if (!Auth::attempt($request->only(['email', 'password']))) {
                 return response()->json([
                     'status' => false,
-                    'message' =>  __('validation.current_password'),
+                    'message' => __('validation.current_password'),
                 ], 401);
             }
-
-            // Retrieve authenticated user
             $user = User::where('email', $request->email)->first();
 
-            // Generate token with user's role as ability
-            $token = $user->createToken('API_TOKEN')->plainTextToken;
-
-            // Return successful response with token
+            // Create OTP and send it on queue
+       $user->generateOtp();
+        SendOtp::dispatch($user);
+        
             return response()->json([
                 'status' => true,
-                'message' => 'User logged in successfully',
-                'role' => $user->role, // Include the user role in the response
-                'token' => $token,
+                'message' => 'OTP sent to your email.',
             ], 200);
         } catch (\Throwable $th) {
             // Return error response in case of an exception
             return response()->json([
                 'status' => false,
-                'message' => __('login_failed'), // Message key
+                'message' => __('login_failed'),
             ], 500);
         }
     }
+  
 }

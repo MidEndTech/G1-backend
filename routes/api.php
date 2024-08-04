@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\LikeController;
+use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\ResetController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Models\User;
@@ -91,60 +92,8 @@ Route::middleware('auth:sanctum')->get('/viewer', [PostController::class, 'viewe
 Route::middleware('SetLocale')->group(function () {
     Route::post('locale/{locale}', [LocaleController::class, 'changeLocale']);
 });
-
-// Route::middleware('SetLocale')->get('lang/{locale}', function ($locale) {
-//     App::setLocale($locale);
-//     session()->put('locale', $locale);
-//     return redirect()->back();
-// });
 Route::post('/send-email', [MailController::class, 'sendEmail']);
 
-Route::post('/register', function (Request $request) {
-    $request->validate([
-        'name'          => ['required', 'string', 'max:255'],
-        'email'         => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-        'password'      => ['required',  Rules\Password::defaults()],
-    ]);
 
-    $otp = Otp::identifier($request->email)->send(
-        new UserRegistrationOtp(
-            name: $request->name,
-            email: $request->email,
-            password: $request->password
-        ),
-        Notification::route('mail', $request->email)
-    );
-
-    return __($otp['status']);
-});
-Route::post('/otp/verify', function (Request $request) {
-
-    $request->validate([
-        'email'    => ['required', 'string', 'email', 'max:255'],
-        'code'     => ['required', 'string']
-    ]);
-
-    $otp = Otp::identifier($request->email)->attempt($request->code);
-
-    if ($otp['status'] != Otp::OTP_PROCESSED) {
-        abort(403, __($otp['status']));
-    }
-
-    return $otp['result'];
-});
-
-
-/** OTP Resend Route */
-Route::post('/otp/resend', function (Request $request) {
-
-    $request->validate([
-        'email'    => ['required', 'string', 'email', 'max:255']
-    ]);
-
-    $otp = Otp::identifier($request->email)->update();
-
-    if ($otp['status'] != Otp::OTP_SENT) {
-        abort(403, __($otp['status']));
-    }
-    return __($otp['status']);
-});
+Route::post('verify-otp', [OtpController::class, 'verifyOtp'])->middleware('auth:sanctum');
+Route::post('resend-otp', [OtpController::class, 'resend'])->middleware('auth:sanctum');

@@ -25,10 +25,19 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'bio',
-        'pic'
+        'pic',
+        'otp',
+        'otp_expires_at',
     ];
 
 
+
+    public function generateOtp()
+    {
+        $this->otp = mt_rand(1000, 9999); // Generate a 6-digit OTP
+        $this->otp_expires_at = now()->addMinutes(2); // OTP valid for 2 minutes
+        $this->save();
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -47,17 +56,25 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'otp_expires_at' => 'datetime',
+
     ];
 
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
-    protected static function booted()
+
+
+    public function isOtpValid($otp)
     {
-        static::created(function ($user) {
-            // Dispatch the job to create and send OTP
-            SendOtp::dispatch($user);
-        });
+        return $this->otp === $otp && $this->otp_expires_at > now();
+    }
+
+    public function clearOtp()
+    {
+        $this->otp = null;
+        $this->otp_expires_at = null;
+        $this->save();
     }
 }
