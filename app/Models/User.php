@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Jobs\SendOtp;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -50,5 +52,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            // Dispatch the job to create and send OTP
+            SendOtp::dispatch($user);
+        });
     }
 }
